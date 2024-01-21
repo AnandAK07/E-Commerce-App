@@ -11,9 +11,10 @@ function App() {
     <div>
       <Navigation/>
       <div>
-        <HomePage/>
+        {/* <HomePage/> */}
       </div>
-        
+      <Product/>
+      {/* <ProductDetails/> */}
       <Footer/>
     </div>
   );
