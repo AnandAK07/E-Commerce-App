@@ -1,7 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-export const HomeSectionCard = () => {
+export const HomeSectionCard = ({product}) => {
+  
   return (
-    <div>HomeSectionCard</div>
+    <div className='cursor-pointer flex flex-col items-center bg-white rounded-lg shadow-lg overflow-hidden w-[14rem] lg:w-[14rem]  sm:w-[15rem] xl:w-[18rem] md:w-[15rem] mx-auto xl:p-3 border'>
+      <div className='h-13rem w-10rem'>
+        <img className='object-cover object-top h-full w-full' src={product.imageUrl} alt="" />
+      </div>
+      <div className='p-4'>
+        <h3 className='text-lg font-medium text-gray-900'>{product.brand}</h3>
+        <p className='mt-2 text-sm text-gray-500'>{product.title}</p>
+      </div>
+    </div>
   )
 }
