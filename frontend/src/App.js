@@ -13,8 +13,8 @@ function App() {
       <div>
         {/* <HomePage/> */}
       </div>
-      {/* <Product/> */}
-      <ProductDetails/>
+      <Product/>
+      {/* <ProductDetails/> */}
       <Footer/>
     </div>
   );

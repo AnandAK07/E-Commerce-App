@@ -1,3 +1,4 @@
+
 import { Fragment, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -129,11 +130,11 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Navigation() {
+export default function Example() {
     const [open, setOpen] = useState(false)
 
     return (
-        <div className="bg-white">
+        <div className={open ? "bg-white " : "bg-white z-50 relative"}>
             {/* Mobile menu */}
             <Transition.Root show={open} as={Fragment}>
                 <Dialog as="div" className="relative z-40 lg:hidden" onClose={setOpen}>

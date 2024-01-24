@@ -1,61 +1,19 @@
-
 import { Fragment, useState } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
 import { mens_kurta } from '../../data/mensKurta'
+import Radio from '@mui/material/Radio';
+import { FormControl, FormControlLabel, FormLabel, RadioGroup } from '@mui/material'
+import FilterListIcon from '@mui/icons-material/FilterList';
+import { filters, singleFilter } from './FilterData'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
   { name: 'Price: Low to High', href: '#', current: false },
   { name: 'Price: High to Low', href: '#', current: false },
 ]
-const subCategories = [
-  { name: 'Totes', href: '#' },
-  { name: 'Backpacks', href: '#' },
-  { name: 'Travel Bags', href: '#' },
-  { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
-]
-const filters = [
-  {
-    id: 'color',
-    name: 'Color',
-    options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
-    ],
-  },
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
-    ],
-  },
-  {
-    id: 'size',
-    name: 'Size',
-    options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
-    ],
-  },
-]
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -64,75 +22,35 @@ function classNames(...classes) {
 
 export const Product = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate();
 
+  const handleFilter = (value, sectionId) => {
+    const searchParams = new URLSearchParams(location.search)
 
-  const products = [
-    {
-      id: 1,
-      name: 'Earthen Bottle',
-      href: '#',
-      price: '$48',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg',
-      imageAlt: 'Tall slender porcelain bottle with natural clay textured body and cork stopper.',
-    },
-    {
-      id: 2,
-      name: 'Nomad Tumbler',
-      href: '#',
-      price: '$35',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
-      imageAlt: 'Olive drab green insulated bottle with flared screw lid and flat top.',
-    },
-    {
-      id: 3,
-      name: 'Focus Paper Refill',
-      href: '#',
-      price: '$89',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg',
-      imageAlt: 'Person using a pen to cross a task off a productivity paper card.',
-    },
-    {
-      id: 4,
-      name: 'Machined Mechanical Pencil',
-      href: '#',
-      price: '$35',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg',
-      imageAlt: 'Hand holding black machined steel mechanical pencil with brass tip and top.',
-    },
-    {
-      id: 5,
-      name: 'Earthen Bottle',
-      href: '#',
-      price: '$48',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg',
-      imageAlt: 'Tall slender porcelain bottle with natural clay textured body and cork stopper.',
-    },
-    {
-      id: 6,
-      name: 'Nomad Tumbler',
-      href: '#',
-      price: '$35',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
-      imageAlt: 'Olive drab green insulated bottle with flared screw lid and flat top.',
-    },
-    {
-      id: 7,
-      name: 'Focus Paper Refill',
-      href: '#',
-      price: '$89',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg',
-      imageAlt: 'Person using a pen to cross a task off a productivity paper card.',
-    },
-    {
-      id: 8,
-      name: 'Machined Mechanical Pencil',
-      href: '#',
-      price: '$35',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg',
-      imageAlt: 'Hand holding black machined steel mechanical pencil with brass tip and top.',
-    },
-    // More products...
-  ]
+    let filterValue = searchParams.getAll(sectionId)
+    if (filterValue.length > 0 && filterValue[0].split(",").includes(value)) {
+      filterValue = filterValue[0].split(",").filter((item => item != value));
+      if (filterValue.length === 0) {
+        searchParams.delete(sectionId)
+      }
+    } else {
+      filterValue.push(value)
+    }
+
+    if (filterValue.length > 0) {
+      searchParams.set(sectionId,filterValue.join(","))
+    }
+    const query = searchParams.toString();
+    navigate({search:`?${query}`})
+  }
+
+  const handleRadioFilterChange = (e, sectionId)=>{
+    const searchParams = new URLSearchParams(location.search)
+    searchParams.set(sectionId,e.target.value)
+    const query = searchParams.toString();
+    navigate({ search: `?${query}` })
+  }
   return (
     <>
       {/* Mobile filter dialog */}
@@ -175,18 +93,52 @@ export const Product = () => {
 
                 {/* Filters */}
                 <form className="mt-4 border-t border-gray-200">
-                  <h3 className="sr-only">Categories</h3>
-                  <ul role="list" className="px-2 py-3 font-medium text-gray-900">
-                    {subCategories.map((category) => (
-                      <li key={category.name}>
-                        <a href={category.href} className="block px-2 py-3">
-                          {category.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+
 
                   {filters.map((section) => (
+                    <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
+                      {({ open }) => (
+                        <>
+                          <h3 className="-mx-2 -my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">{section.name}</span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                                ) : (
+                                  <PlusIcon className="h-5 w-5" aria-hidden="true" />
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            <div className="space-y-6">
+                              {section.options.map((option, optionIdx) => (
+                                <div key={option.value} className="flex items-center">
+                                  <input
+                                    onChange={() => handleFilter(option.value, section.id)}
+                                    id={`filter-mobile-${section.id}-${optionIdx}`}
+                                    name={`${section.id}[]`}
+                                    defaultValue={option.value}
+                                    type="checkbox"
+                                    defaultChecked={option.checked}
+                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  />
+                                  <label
+                                    htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
+                                    className="ml-3 min-w-0 flex-1 text-gray-500"
+                                  >
+                                    {option.label}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+                  ))}
+                  {singleFilter.map((section) => (
                     <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
                       {({ open }) => (
                         <>
@@ -305,79 +257,135 @@ export const Product = () => {
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
             {/* Filters */}
-            <form className="hidden lg:block">
-              <h3 className="sr-only">Categories</h3>
-              <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
-                {subCategories.map((category) => (
-                  <li key={category.name}>
-                    <a href={category.href}>{category.name}</a>
-                  </li>
+            <div>
+              <div className='py-10 flex justify-between center'>
+
+                <h1 className='text-lg opacity-50 font-bold'>Filters</h1>
+                <FilterListIcon />
+              </div>
+              <form className="hidden lg:block">
+
+
+                {filters.map((section) => (
+                  <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
+                    {({ open }) => (
+                      <>
+                        <h3 className="-my-3 flow-root">
+                          <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                            <span className="font-medium text-gray-900">{section.name}</span>
+                            <span className="ml-6 flex items-center">
+                              {open ? (
+                                <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                              ) : (
+                                <PlusIcon className="h-5 w-5" aria-hidden="true" />
+                              )}
+                            </span>
+                          </Disclosure.Button>
+                        </h3>
+                        <Disclosure.Panel className="pt-6">
+                          <div className="space-y-4">
+                            {section.options.map((option, optionIdx) => (
+                              <div key={option.value} className="flex items-center">
+                                <input
+                                  onChange={() => handleFilter(option.value, section.id)}
+                                  id={`filter-${section.id}-${optionIdx}`}
+                                  name={`${section.id}[]`}
+                                  defaultValue={option.value}
+                                  type="checkbox"
+                                  defaultChecked={option.checked}
+                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <label
+                                  htmlFor={`filter-${section.id}-${optionIdx}`}
+                                  className="ml-3 text-sm text-gray-600"
+                                >
+                                  {option.label}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        </Disclosure.Panel>
+                      </>
+                    )}
+                  </Disclosure>
                 ))}
-              </ul>
-
-              {filters.map((section) => (
-                <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
-                  {({ open }) => (
-                    <>
-                      <h3 className="-my-3 flow-root">
-                        <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                          <span className="font-medium text-gray-900">{section.name}</span>
-                          <span className="ml-6 flex items-center">
-                            {open ? (
-                              <MinusIcon className="h-5 w-5" aria-hidden="true" />
-                            ) : (
-                              <PlusIcon className="h-5 w-5" aria-hidden="true" />
-                            )}
-                          </span>
-                        </Disclosure.Button>
-                      </h3>
-                      <Disclosure.Panel className="pt-6">
-                        <div className="space-y-4">
-                          {section.options.map((option, optionIdx) => (
-                            <div key={option.value} className="flex items-center">
-                              <input
-                                id={`filter-${section.id}-${optionIdx}`}
-                                name={`${section.id}[]`}
-                                defaultValue={option.value}
-                                type="checkbox"
-                                defaultChecked={option.checked}
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                              />
-                              <label
-                                htmlFor={`filter-${section.id}-${optionIdx}`}
-                                className="ml-3 text-sm text-gray-600"
+                {singleFilter.map((section) => (
+                  <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
+                    {({ open }) => (
+                      <>
+                        <h3 className="-my-3 flow-root">
+                          <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                            {/* <span className="font-medium text-gray-900">{section.name}</span> */}
+                            <FormLabel style={{ color: 'black' }} id="demo-radio-buttons-group-label">{section.name}</FormLabel>
+                            <span className="ml-6 flex items-center">
+                              {open ? (
+                                <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                              ) : (
+                                <PlusIcon className="h-5 w-5" aria-hidden="true" />
+                              )}
+                            </span>
+                          </Disclosure.Button>
+                        </h3>
+                        <Disclosure.Panel className="pt-6">
+                          <div className="space-y-4">
+                            <FormControl>
+                              <RadioGroup
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                defaultValue="female"
+                                name="radio-buttons-group"
                               >
-                                {option.label}
-                              </label>
-                            </div>
-                          ))}
-                        </div>
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
-              ))}
-            </form>
+                                {section.options.map((option, optionIdx) => (
+                                  <>
+                                    <FormControlLabel onChange={(e)=>handleRadioFilterChange(e,section.id)} value={option.value} control={<Radio />} label={option.label} />
+                                  </>
+                                ))}
+                              </RadioGroup>
+                            </FormControl>
+                          </div>
+                        </Disclosure.Panel>
 
+                      </>
+                    )}
+                  </Disclosure>
+                ))}
+              </form>
+            </div>
             {/* Product grid */}
             <div className="lg:col-span-3">{/* Your content */}
               <div className="bg-white">
                 <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-6 lg:max-w-7xl lg:px-8">
-                  <h2 className="sr-only">Products</h2>
+                  <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2>
 
-                  <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+                  <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     {mens_kurta.map((product) => (
-                      <a key={product.id} href={product.href} className="group">
-                        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                      <div key={product.id} className="group relative">
+                        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                           <img
                             src={product.imageUrl}
-                            alt={product.title}
-                            className="h-full w-full object-cover object-center group-hover:opacity-75"
+                            alt={product.imageAlt}
+                            className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                           />
                         </div>
-                        <h3 className="mt-4 text-sm text-gray-700">{product.brand}</h3>
-                        <p className="mt-1 text-lg font-medium text-gray-900">{product.price}</p>
-                      </a>
+                        <div className="mt-4 flex flex-col">
+                          <div>
+                            <div>
+
+                              <h3 className="font-bold text-gray-700">
+                                <a href={product.href}>
+                                  <span aria-hidden="true" className="absolute inset-0" />
+                                  {product.title}
+                                </a>
+                              </h3>
+                              <p className='text-sm text-gray-700'>{product.brand}</p>
+                            </div>
+                            <div className='flex items-center space-x-3'>
+                              <p className=" ">₹{product.price}</p>
+                              <p className="line-through text-gray-500">₹{product.discountedPrice}</p>
+                              <p className='text-green-600 font-semibold'>{product.discountPersent}% off</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
