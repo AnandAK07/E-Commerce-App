@@ -5,7 +5,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 export const CartItem = () => {
     return (
-        <div className='mt-10 mb-10 p-5 shadow-lg border rounded-md'>
+        <div className=' mb-10 p-5 shadow-lg border rounded-md'>
             <div className="flex items-center">
                 <div className="w-[5rem] h-[5rem] lg:w-[9rem] lg:h-[9rem]">
                     <img className='w-full h-full object-cover object-top' src="https://rukminim1.flixcart.com/image/612/612/l5h2xe80/kurta/x/6/n/xl-kast-tile-green-majestic-man-original-imagg4z33hu4kzpv.jpeg?q=70" alt="" />

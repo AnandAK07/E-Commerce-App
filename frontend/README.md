@@ -25,3 +25,6 @@ npm i @tailwindcss/aspect-ratio
 ProductDetails
 Tailwind CSS component-Product Overviews
 npm i @tailwindcss/aspect-ratio
+
+Checkout Page
+Stepper =MUI stepper Linear
