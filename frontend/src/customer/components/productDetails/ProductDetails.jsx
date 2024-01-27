@@ -3,6 +3,7 @@ import { StarIcon } from '@heroicons/react/20/solid'
 import { RadioGroup } from '@headlessui/react'
 import { Box, Button, Grid, LinearProgress, Rating } from '@mui/material'
 import { ProductReviewCard } from './ProductReviewCard'
+import { useNavigate } from 'react-router-dom'
 
 const product = {
   name: 'Basic Tee 6-Pack',
@@ -61,7 +62,11 @@ function classNames(...classes) {
 export const ProductDetails = () => {
   const [selectedColor, setSelectedColor] = useState(product.colors[0])
   const [selectedSize, setSelectedSize] = useState(product.sizes[2])
+  const navigate = useNavigate();
 
+  const handleAddToCart = () => {
+    navigate(`/cart`)
+  }
   return (
     <div className="bg-white px-20">
       <div className="pt-6">
@@ -223,7 +228,7 @@ export const ProductDetails = () => {
                 </RadioGroup>
               </div>
 
-              <Button variant='contained' sx={{ mt: '1rem', px: '2rem', py: '1rem', bgcolor: '#9155fd' }}
+              <Button onClick={handleAddToCart} variant='contained' sx={{ mt: '1rem', px: '2rem', py: '1rem', bgcolor: '#9155fd' }}
               >
                 Add to Cart
               </Button>
@@ -283,7 +288,7 @@ export const ProductDetails = () => {
                 </div>
 
                 <Box className='mt-5 space-y-3'>
-                  <Grid container  alignItems={'center'} gap={2}>
+                  <Grid container alignItems={'center'} gap={2}>
                     <Grid item xs={2}>
                       <p>Excellent</p>
                     </Grid>
@@ -309,7 +314,7 @@ export const ProductDetails = () => {
                       <LinearProgress sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }} variant="determinate" value={25} color='warning' />
                     </Grid>
                   </Grid>
-                  
+
                   <Grid container alignItems={'center'} gap={2}>
                     <Grid item xs={2}>
                       <p>Averange</p>
